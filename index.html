@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Emotion Detector</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Emotion Detector</h1>
+
+    <form id="uploadForm" action="/detect" method="post" enctype="multipart/form-data">
+      <input type="file" name="image" accept="image/*" required>
+      <div style="margin-top:12px;">
+        <button type="submit">Detect from file</button>
+        <a class="btn-link" href="/camera">Use camera</a>
+      </div>
+    </form>
+
+    {% if emotion %}
+    <div class="result">
+      <h2>Detected Emotion</h2>
+      <p>{{ emotion }}</p>
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>

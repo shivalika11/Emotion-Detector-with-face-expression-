@@ -1,0 +1,56 @@
+body {
+    font-family: Arial;
+    text-align: center;
+    background: #f4f4f4;
+    padding: 40px;
+}
+
+.container {
+    background: white;
+    max-width: 720px;
+    width: 90%;
+    margin: auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px gray;
+}
+
+button {
+    background: #007BFF;
+    padding: 10px 20px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+.result {
+    margin-top: 20px;
+    padding: 10px;
+    background: #e8ffe5;
+    border-radius: 5px;
+}
+
+video {
+    width: 100%;
+    max-width: 640px;
+    border-radius: 8px;
+    margin-top: 12px;
+}
+
+.btn-link {
+    margin-left: 12px;
+    color: white;
+    background: #28a745;
+    padding: 8px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.btn-link:hover {
+    background: #218838;
+}

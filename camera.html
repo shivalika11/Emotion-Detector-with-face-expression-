@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Camera Emotion Detector</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Camera Emotion Detector</h1>
+
+    <video id="video" playsinline autoplay></video>
+    <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+
+    <div style="margin-top:12px;">
+      <button id="detectBtn">Detect Emotion (capture)</button>
+      <a class="btn-link" href="/">Upload image instead</a>
+    </div>
+
+    <div id="resultArea"></div>
+  </div>
+
+<script>
+async function initCamera() {
+  const video = document.getElementById('video');
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    video.srcObject = stream;
+  } catch (err) {
+    document.getElementById('resultArea').innerText = 'Camera access denied or not available.';
+  }
+}
+
+async function captureAndSend() {
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  canvas.width = video.videoWidth || 640;
+  canvas.height = video.videoHeight || 480;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  canvas.toBlob(async (blob) => {
+    const fd = new FormData();
+    fd.append('image', blob, 'capture.jpg');
+    const res = await fetch('/detect', { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } });
+    const json = await res.json();
+    showResults(json.faces);
+  }, 'image/jpeg', 0.9);
+}
+
+function showResults(faces) {
+  const resultArea = document.getElementById('resultArea');
+  resultArea.innerHTML = '';
+  if (!faces || faces.length === 0) {
+    resultArea.innerHTML = '<div class="result">No faces detected</div>';
+    return;
+  }
+  faces.forEach((f, i) => {
+    const el = document.createElement('div');
+    el.className = 'result';
+    el.innerHTML = `<strong>Face ${i+1}</strong> — ${f.top_emotion || 'unknown'}<br>
+                    ${Object.entries(f.emotions || {}).map(([k,v]) => `${k}: ${v.toFixed(2)}`).join(', ')}`;
+    resultArea.appendChild(el);
+  });
+}
+
+document.getElementById('detectBtn').addEventListener('click', captureAndSend);
+initCamera();
+</script>
+</body>
+</html>
